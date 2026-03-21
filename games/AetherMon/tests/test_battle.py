@@ -166,6 +166,61 @@ class TestStatusInBattle:
         assert eff == 0.0
 
 
+class TestStunStatus:
+    """Tests for the stun status — must clear after one turn regardless of proc."""
+
+    def test_stun_always_clears_after_turn(self):
+        """Stun must be None after _execute_move is called, whether or not it fired."""
+        import random
+        from unittest.mock import patch
+        from src.engine.battle import BattleEngine, TurnResult
+        from src.entities.creature import Creature
+        from src.entities.player import Player
+        from src.data.creatures_data import CREATURES
+
+        for should_proc in [True, False]:
+            p = Player("T")
+            p.add_to_party(Creature(CREATURES["Ignix"], level=20))
+            enemy = Creature(CREATURES["Galebird"], level=10)
+            engine = BattleEngine(p, enemy, is_wild=True)
+
+            attacker = p.active()
+            attacker.status = "stun"
+            res = TurnResult()
+
+            rand_val = 0.1 if should_proc else 0.9  # below or above 0.25
+            with patch("src.engine.battle.random.random", return_value=rand_val):
+                engine._execute_move(attacker, enemy, "Tackle", res)
+
+            assert attacker.status is None, (
+                f"Stun should always clear after a turn (proc={should_proc})"
+            )
+
+    def test_stun_fires_blocks_movement(self):
+        """When stun procs (25%), creature should not deal damage."""
+        from unittest.mock import patch
+        from src.engine.battle import BattleEngine, TurnResult
+        from src.entities.creature import Creature
+        from src.entities.player import Player
+        from src.data.creatures_data import CREATURES
+
+        p = Player("T")
+        p.add_to_party(Creature(CREATURES["Ignix"], level=20))
+        enemy = Creature(CREATURES["Galebird"], level=10)
+        engine = BattleEngine(p, enemy, is_wild=True)
+
+        attacker = p.active()
+        attacker.status = "stun"
+        hp_before = enemy.current_hp
+        res = TurnResult()
+
+        with patch("src.engine.battle.random.random", return_value=0.1):  # <0.25 → proc
+            engine._execute_move(attacker, enemy, "Tackle", res)
+
+        assert enemy.current_hp == hp_before, "Stunned creature should deal no damage"
+        assert any("stunned" in m.lower() for m in res.messages)
+
+
 class TestStatsAndStages:
     def test_stat_stage_atk_down(self, player_with_ignix, weak_enemy):
         enemy = Creature(CREATURES["Voltix"], level=10)

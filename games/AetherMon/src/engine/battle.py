@@ -198,11 +198,12 @@ class BattleEngine:
         elif freeze_msg:
             res.add(freeze_msg)
 
-        # Stun: 25% chance to fail
-        if attacker.status == "stun" and random.random() < 0.25:
-            res.add(f"{attacker.name} is stunned and couldn't move!")
-            attacker.status = None  # stun clears after one turn
-            return
+        # Stun: 25% chance to fail. Always clears after the attempt.
+        if attacker.status == "stun":
+            attacker.status = None
+            if random.random() < 0.25:
+                res.add(f"{attacker.name} is stunned and couldn't move!")
+                return
 
         # Confusion: 33% chance to hurt self
         if attacker.confused_turns > 0:

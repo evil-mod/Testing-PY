@@ -270,7 +270,6 @@ class Game:
         )[0]
         lvl = random.randint(min_lv, max_lv)
         wild = Creature(CREATURES[name], level=lvl)
-        self.renderer.print(f"[bold yellow]A wild {wild.name} (Lv{wild.level}) appeared![/bold yellow]")
         time.sleep(0.5)
 
         outcome = run_battle_ui(self.player, wild, self.renderer, is_wild=True)
