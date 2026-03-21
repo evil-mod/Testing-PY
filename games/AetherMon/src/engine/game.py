@@ -71,7 +71,7 @@ class Game:
     def _new_game(self) -> None:
         self.renderer.clear()
         self.renderer.print(
-            "[bold cyan]Prof. Aethon:[/cyan][/bold] Welcome, young Trainer, "
+            "[bold][cyan]Prof. Aethon:[/cyan][/bold] Welcome, young Trainer, "
             "to the world of [bold magenta]AetherMon[/bold magenta]!\n"
             "Magical creatures dwell everywhere — as companions, as challenges.\n"
             "Pick your partner and begin your journey!\n"
