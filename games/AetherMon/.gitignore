@@ -31,3 +31,14 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# AI tooling / instruction files (may contain personal paths or usernames)
+.github/instructions/
+*.instructions.md
+
+# Personal setup scripts (contain usernames / org-specific paths)
+setup-github.ps1
+
+# Temporary test output
+autoplay_stderr.txt
+autoplay_stdout.txt
