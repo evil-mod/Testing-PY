@@ -1,4 +1,4 @@
-﻿# evil-mod / Testing
+﻿# evil-mod / Testing-PY
 
 A collection of sample projects used for learning, experimentation, and testing Python concepts.
 
